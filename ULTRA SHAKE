@@ -1,15 +1,36 @@
 local function eatBoosts()
     local player = game.Players.LocalPlayer
     local backpack = player.Backpack
-    local boosts = {"ULTRA Shake"} -- Corrected boost names
-
+    local boosts = {"ULTRA Shake"} -- Boosts that you want to eat
+    
     for _, boostName in ipairs(boosts) do
         local boost = backpack:FindFirstChild(boostName)
         while boost do
-            -- Equip the boost item
-            boost.Parent = player.Character
-            -- Consume the boost item
-            boost:Activate()
+            -- Ensure the player's character is valid
+            if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+                -- Equip the boost item
+                boost.Parent = player.Character
+                
+                -- Check if the boost is a Tool and has an Activate method
+                if boost:IsA("Tool") then
+                    -- Assuming Activate is a method you want to call
+                    if boost:FindFirstChild("Activate") and type(boost.Activate) == "function" then
+                        -- Consume the boost item
+                        boost:Activate()
+                    else
+                        print(boostName .. " does not have an 'Activate' method or is not a Tool.")
+                    end
+                    
+                    -- Return the tool back to the backpack if needed
+                    boost.Parent = backpack
+                else
+                    print(boostName .. " is not a Tool.")
+                end
+            else
+                print("Player's character is not valid.")
+                break -- Exit the loop if the character is invalid
+            end
+            
             -- Check for the next instance of the boost in the backpack
             boost = backpack:FindFirstChild(boostName)
         end
