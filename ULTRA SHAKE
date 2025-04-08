@@ -55,3 +55,40 @@ for i, boost in ipairs(Boosts) do
         end
     end)
 end
+-- Function to auto consume selected boosts
+local function autoConsumeBoosts()
+    while true do
+        wait(1) -- Adjust the wait time as needed
+        local player = game.Players.LocalPlayer
+        local backpack = player.Backpack
+        for _, item in pairs(backpack:GetChildren()) do
+            if BoostSelections[item.Name] then
+                player.Character.Humanoid:EquipTool(item)
+                item:Activate()
+            end
+        end
+    end
+end
+
+-- Create the Start Button
+local StartButton = Instance.new("TextButton")
+StartButton.Size = UDim2.new(0, 100, 0, 50)
+StartButton.Position = UDim2.new(1, 10, 0, 0) -- Position it to the right side of ScreenGui
+StartButton.BackgroundColor3 = Color3.fromRGB(0, 128, 0)
+StartButton.Text = "Start"
+StartButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+StartButton.Font = Enum.Font.SourceSans
+StartButton.TextSize = 24
+StartButton.Parent = Frame
+StartButton.Active = true
+StartButton.Draggable = true
+-- Start the auto consume when the button is clicked
+StartButton.MouseButton1Click:Connect(function()
+    if StartButton.Text == "Start" then
+        StartButton.Text = "Running..."
+        autoConsumeBoosts()
+    else
+        StartButton.Text = "Start"
+        -- Add logic to stop the autoConsumeBoosts function if needed
+    end
+end)
