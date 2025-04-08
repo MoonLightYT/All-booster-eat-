@@ -1,55 +1,57 @@
-local function eatBoosts()
-    local player = game.Players.LocalPlayer
-    local backpack = player.Backpack
-    local boosts = {"ULTRA Shake"} -- Boosts that you want to eat
+-- Create the Screen GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "AUTO EAT BOOSTS MADE BY MOHA"
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+-- Create the Frame
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 300, 0, 250)
+Frame.Position = UDim2.new(0.5, -150, 0.5, -125)
+Frame.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+Frame.Active = true
+Frame.Draggable = true
+Frame.Parent = ScreenGui
+-- Create the TextLabel
+local TextLabel = Instance.new("TextLabel")
+TextLabel.Size = UDim2.new(1, 0, 0.2, 0)
+TextLabel.Position = UDim2.new(0, 0, 0, 0)
+TextLabel.BackgroundTransparency = 1
+TextLabel.Text = "Auto EAT BOOSTS BY MOHA"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.Font = Enum.Font.SourceSans
+TextLabel.TextSize = 24
+TextLabel.Parent = Frame
+-- Create the TextLabel
+local TextLabel = Instance.new("TextLabel")
+TextLabel.Size = UDim2.new(1, 0, 0.2, 0)
+TextLabel.Position = UDim2.new(0, 0, 0, 0)
+TextLabel.BackgroundTransparency = 1
+TextLabel.Text = "Auto EAT BOOSTS BY MOHA"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.Font = Enum.Font.SourceSans
+TextLabel.TextSize = 24
+TextLabel.Parent = Frame
+-- Create the Boost selection buttons
+local Boosts = {"Protein Bar", "Ultra Shake", "Energy Bar", "Tough Bar", "Protein Shake"}
+local BoostSelections = {}
+
+for i, boost in ipairs(Boosts) do
+    local BoostButton = Instance.new("TextButton")
+    BoostButton.Size = UDim2.new(0.8, 0, 0.15, 0)
+    BoostButton.Position = UDim2.new(0.1, 0, 0.2 + (i - 1) * 0.18, 0)
+    BoostButton.BackgroundColor3 = Color3.fromRGB(255, 0, 255)
+    BoostButton.Text = boost
+    BoostButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+    BoostButton.Font = Enum.Font.SourceSans
+    BoostButton.TextSize = 18
+    BoostButton.Parent = Frame
     
-    for _, boostName in ipairs(boosts) do
-        local boost = backpack:FindFirstChild(boostName)
-        while boost do
-            -- Ensure the player's character is valid
-            if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
-                -- Equip the boost item
-                boost.Parent = player.Character
-                
-                -- Check if the boost is a Tool and has an Activate method
-                if boost:IsA("Tool") then
-                    -- Assuming Activate is a method you want to call
-                    if boost:FindFirstChild("Activate") and type(boost.Activate) == "function" then
-                        -- Consume the boost item
-                        boost:Activate()
-                    else
-                        print(boostName .. " does not have an 'Activate' method or is not a Tool.")
-                    end
-                    
-                    -- Return the tool back to the backpack if needed
-                    boost.Parent = backpack
-                else
-                    print(boostName .. " is not a Tool.")
-                end
-            else
-                print("Player's character is not valid.")
-                break -- Exit the loop if the character is invalid
-            end
-            
-            -- Check for the next instance of the boost in the backpack
-            boost = backpack:FindFirstChild(boostName)
+    BoostButton.MouseButton1Click:Connect(function()
+        if BoostSelections[boost] then
+            BoostSelections[boost] = nil
+            BoostButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        else
+            BoostSelections[boost] = true
+            BoostButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
         end
-    end
+    end)
 end
-
-local function createEatBoostsGui()
-    local player = game.Players.LocalPlayer
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "EatBoosts"
-    screenGui.Parent = player.PlayerGui
-
-    local button = Instance.new("TextButton")
-    button.Size = UDim2.new(0, 200, 0, 50)
-    button.Position = UDim2.new(0.5, -100, 0.5, -25)
-    button.Text = "Eat All Boosts"
-    button.Parent = screenGui
-
-    button.MouseButton1Click:Connect(eatBoosts)
-end
-
-createEatBoostsGui()
